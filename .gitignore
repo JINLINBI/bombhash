@@ -1,0 +1,4 @@
+*.7z
+*.o
+build/test
+*.txt
