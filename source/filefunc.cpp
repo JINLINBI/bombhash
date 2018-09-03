@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <cstring>
+#include "macros.hpp"
+#include "filefunc.hpp"
 using namespace std;
 
 
@@ -32,7 +35,6 @@ int main2(int argc, char* argv[]){
 //                cout << endl;
 //                index = 0;
 //            }
-
         }
     }
 
@@ -97,4 +99,43 @@ bool cmpBinary(unsigned char a, unsigned char b, short level){
     }
 
     return true;
+}
+
+
+ex_binary_t analyseBinary(unsigned char* p, size_t len){
+    ex_binary_t result;
+    memset(&result, 0, sizeof(result));
+
+    result.len = len;
+    result.black = 0;
+    result.white = 0;
+    result.most_len[0] = 1;
+    result.most_len[1] = 1;
+
+    bool _inblack = true, inblack = true;
+    size_t index = 0;
+    size_t most_len = 0;
+
+    while( index < len ){
+        // FIXME: optimize code
+        for(int i = 8; i > 0; --i){
+            inblack = p[index] & 1 << (i - 1)? true: false;
+            inblack? ++result.black: ++result.white;
+
+            //1->0 or 1->0 or block end
+            if(_inblack != inblack || (index == len - 1 && i == 0)){
+                if(result.most_len[_inblack] < most_len){
+                    result.most_len[_inblack] = most_len;
+                }
+                _inblack = inblack;
+                most_len = 1;
+            }
+            else{
+                ++most_len;
+            }
+        }
+        ++index;
+    }
+
+    return result;
 }

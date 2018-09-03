@@ -49,8 +49,12 @@ bool doHash(unsigned char* a, unsigned char* b){
     return hit;
 }
 
+bool parsehash(unsigned char* hash, int index){
+    return true;
+}
 
-unsigned char* EXHASH(unsigned int seed,size_t len, size_t num){
+
+unsigned char* EXHASH(unsigned char* hash, size_t len, size_t num){
     size_t white = len - num;
     size_t black = num;
     unsigned char* p = new unsigned char[len];
@@ -59,12 +63,11 @@ unsigned char* EXHASH(unsigned int seed,size_t len, size_t num){
         return NULL;
 
     int index = 0;
-    srand(seed);
     bool blackColor = false;
 
     for(size_t i = 0; i < len; ++i){
         for(int bit = 7; bit >= 0; --bit){
-            if(rand() % 2){
+            if(parsehash(hash, index)){
                 blackColor = true;
             }
             else{

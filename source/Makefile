@@ -1,7 +1,7 @@
 CXX = g++
 
 CXXFLAGS = -O2 -g -Wall -fmessage-length=0
-CFLAGS =
+CFLAGS = -DDEBUG
 LDFLAGS= -lcrypto
 
 OBJS =     main.o    \

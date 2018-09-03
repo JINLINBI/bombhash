@@ -3,3 +3,4 @@
 build/test
 *.txt
 *.swp
+tags
