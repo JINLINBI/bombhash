@@ -14,13 +14,13 @@ $(TARGET):   $(foreach i,$(OBJS), ../build/$(i))
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 $(BUILDDIR)main.o: main.cpp
-	$(CXX) $(CFLAGS) -I../include -o ../build/$@ -c $<
+	$(CXX) $(CFLAGS) -I../include -o $@ -c $<
 
 $(BUILDDIR)filefunc.o: filefunc.cpp
-	$(CXX) $(CFLAGS) -I../include -o ../build/$@ -c $<
+	$(CXX) $(CFLAGS) -I../include -o $@ -c $<
 
 $(BUILDDIR)hashfunc.o: hashfunc.cpp
-	$(CXX) $(CFLAGS) -I../include -o ../build/$@ -c $<
+	$(CXX) $(CFLAGS) -I../include -o $@ -c $<
 
 .PHONY: all
 all:$(TARGET)

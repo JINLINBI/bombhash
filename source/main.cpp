@@ -20,18 +20,29 @@ int main(int argc, char* argv[]){
         blackCount += countBinary(b[i]);
     }
 
-    p = EXHASH(SHA_DIGEST_LENGTH, blackCount);
-    if(p){
-        for(size_t i = 0; i < SHA_DIGEST_LENGTH; ++i){
-            printBinary(p[i]);
-            cout << " >> ";
-            printBinary(b[i]);
-            cout << endl;
-        }
+    bool pass = false;
+    srand(423432423);
+    while(!pass){
+        p = EXHASH(rand(), SHA_DIGEST_LENGTH, blackCount);
+        if(p){
+            bool enough = true;
+            for(size_t i = 0; i < SHA_DIGEST_LENGTH; ++i){
+                if(!cmpBinary(p[i], b[i], 1))
+                    enough = false;
+                printBinary(p[i]);
+                cout << " >> ";
+                printBinary(b[i]);
+                cout << endl;
+            }
+            cout << "--------------------------------------------------" << endl;
 
-        delete []p;
-        //for(int i = 0; i < 1024; ++i)
-        //    cout << "successfully found specific key! :" << hex << (int)a[i] << endl;
+            if(enough)
+                pass = true;
+
+            delete []p;
+            //for(int i = 0; i < 1024; ++i)
+            //    cout << "successfully found specific key! :" << hex << (int)a[i] << endl;
+        }
     }
 
     return 0;

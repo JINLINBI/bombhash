@@ -76,7 +76,6 @@ void printBinary(char ch){
     }
 }
 
-
 int countBinary(char ch){
     int count = 0;
     for(int i = 7; i >= 0; --i){
@@ -85,4 +84,17 @@ int countBinary(char ch){
     }
 
     return count;
+}
+
+bool cmpBinary(unsigned char a, unsigned char b, short level){
+    short mistake = 0;
+    for(int i = 0; i < 8; ++i){
+        if((a &= (1 << i)) !=  (b &= (1<< i)))
+            ++mistake;
+
+        if(mistake == level)
+            return false;
+    }
+
+    return true;
 }
