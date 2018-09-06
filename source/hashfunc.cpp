@@ -3,20 +3,22 @@
 #include <iomanip>
 #include <openssl/sha.h>
 #include <stdlib.h>
+#include "macros.hpp"
+
 using namespace std;
 
-bool doHash(unsigned char* a, unsigned char* b){
+bool doHash(uint8_t* a, uint8_t* b){
     static int callTime = 0;
-    char enstr[1024];
+    uint8_t enstr[1024];
     int rand = 0;
 
     for(int i = 0; i < 16; ++i){
         while(!rand) rand = random();
-        enstr[i] = (char)rand;
+        enstr[i] = (uint8_t)rand;
         rand = 0;
     }
 
-    //SHA1((unsigned char*)enstr, 16, a);
+    //SHA1((uint8_t*)enstr, 16, a);
     cout << "CALL " << dec << callTime << " TIMES: ";
 
     for(int i = 0; i < 16; ++i){
@@ -49,15 +51,24 @@ bool doHash(unsigned char* a, unsigned char* b){
     return hit;
 }
 
-bool parsehash(unsigned char* hash, int index){
-    return true;
+bool parsehash(const uint8_t* hash, int index){
+    int result;
+    for(int i = 0; i < BLOCK; ++i){
+        result += (hash[i] >> 4 | ~hash[i]);
+        if( result &= hash[i] ){
+            result ^= index ^ 3433;
+        }
+        else
+            result ^= index ^ 3343;
+    }
+
+    return result << index % 3;
 }
 
 
-unsigned char* EXHASH(unsigned char* hash, size_t len, size_t num){
-    size_t white = len - num;
-    size_t black = num;
-    unsigned char* p = new unsigned char[len];
+uint8_t* EXHASH(uint8_t* hash, size_t len, size_t black){
+    size_t white = len - black;
+    uint8_t* p = new uint8_t[len];
 
     if(!p)
         return NULL;
@@ -67,24 +78,60 @@ unsigned char* EXHASH(unsigned char* hash, size_t len, size_t num){
 
     for(size_t i = 0; i < len; ++i){
         for(int bit = 7; bit >= 0; --bit){
-            if(parsehash(hash, index)){
-                blackColor = true;
-            }
-            else{
-                blackColor = false;
-            }
+            blackColor = parsehash(hash, index);
 
             if(blackColor && black){
                 p[index] |= 1 << bit;
                 --black;
             }
-            else if(!blackColor && white--){
+            if(blackColor && !black){
                 p[index] &= ~(1 << bit);
                 --white;
             }
-            else{
-                blackColor? p[index] &= ~(1 << bit): p[index] |= 1 << bit;
-                blackColor? --white: --black;
+            else if(!blackColor && white){
+                p[index] &= ~(1 << bit);
+                --white;
+            }
+            else if(!blackColor && !white){
+                p[index] |= 1 << bit;
+                --black;
+            }
+        }
+        ++index;
+    }
+
+    return p;
+}
+
+uint8_t* RANDEXHASH(size_t len, size_t black){
+    size_t white = len - black;
+    uint8_t* p = new uint8_t[len];
+
+    if(!p)
+        return NULL;
+
+    int index = 0;
+    bool blackColor = false;
+
+    for(size_t i = 0; i < len; ++i){
+        for(int bit = 7; bit >= 0; --bit){
+            blackColor = (rand() + 3333) % 2;
+
+            if(blackColor && black){
+                p[index] |= 1 << bit;
+                --black;
+            }
+            if(blackColor && !black){
+                p[index] &= ~(1 << bit);
+                --white;
+            }
+            if(!blackColor && white){
+                p[index] &= ~(1 << bit);
+                --white;
+            }
+            if(!blackColor && !white){
+                p[index] |= 1 << bit;
+                --black;
             }
         }
         ++index;

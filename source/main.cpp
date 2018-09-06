@@ -17,43 +17,50 @@ int main(int argc, char* argv[]){
     unsigned char *p;
 
     size_t blackCount = 0;
-    //for(int i = 0; i < SHA_DIGEST_LENGTH; ++i){
-    //    blackCount += countBinary(b[i]);
-    //}
+    for(int i = 0; i < SHA_DIGEST_LENGTH; ++i){
+        blackCount += countBinary(b[i]);
+    }
 
-    ex_binary_t analyse = analyseBinary(b, BLOCK);
+    //ex_binary_t analyse = analyseBinary(b, BLOCK);
 
-    cout << "analyse.len  : " << analyse.len << endl;
-    cout << "analyse.black: " << analyse.black << endl;
-    cout << "analyse.white: " << analyse.white << endl;
-    cout << "analyse.most_len[0]: " << analyse.most_len[0] << endl;
-    cout << "analyse.most_len[1]: " << analyse.most_len[1] << endl;
+    //cout << "analyse.len  : " << analyse.len << endl;
+    //cout << "analyse.black: " << analyse.black << endl;
+    //cout << "analyse.white: " << analyse.white << endl;
+    //cout << "analyse.most_len[0]: " << analyse.most_len[0] << endl;
+    //cout << "analyse.most_len[1]: " << analyse.most_len[1] << endl;
+    //cout << "analyse.avg_len[0]: " << analyse.avg_len[0] << endl;
+    //cout << "analyse.avg_len[1]: " << analyse.avg_len[1] << endl;
 
-    // TEST: pass->true
-    //bool pass = true;
-    //srand(423432423);
-    //while(!pass){
-    //    p = EXHASH(rand(), SHA_DIGEST_LENGTH, blackCount);
-    //    if(p){
-    //        bool enough = true;
-    //        for(size_t i = 0; i < SHA_DIGEST_LENGTH; ++i){
-    //            if(!cmpBinary(p[i], b[i], 1))
-    //                enough = false;
-    //            printBinary(p[i]);
-    //            cout << " >> ";
-    //            printBinary(b[i]);
-    //            cout << endl;
-    //        }
-    //        cout << "--------------------------------------------------" << endl;
+    bool pass = false;
+    srand(877234234);
 
-    //        if(enough)
-    //            pass = true;
+    int count = 0;
+    while(!pass){
+        count++;
+        if(count == 1000) break;
+        p = RANDEXHASH(SHA_DIGEST_LENGTH, blackCount);
+        //p = RANDEXHASH((uint8_t*)"hasdfaserowerw", SHA_DIGEST_LENGTH, blackCount);
+        if(p){
+            bool enough = true;
+            int index = 0;
+            for(size_t i = 0; i < SHA_DIGEST_LENGTH; ++i){
+                if(!cmpBinary(p[i], b[i], 1))
+                    enough = false;
+                printBinaryCmp(p[i], b[i]);
+                index++;
+            }
 
-    //        delete []p;
-    //        //for(int i = 0; i < 1024; ++i)
-    //        //    cout << "successfully found specific key! :" << hex << (int)a[i] << endl;
-    //    }
-    //}
+            if(enough)
+                pass = true;
+            else
+                enough = true;
+            cout << endl;
+
+            delete []p;
+            //for(int i = 0; i < 1024; ++i)
+            //    cout << "successfully found specific key! :" << hex << (int)a[i] << endl;
+        }
+    }
 
     return 0;
 }

@@ -1,3 +1,4 @@
 #pragma one
-bool doHash(unsigned char*, unsigned char*);
-unsigned char* EXHASH(unsigned int, size_t, size_t);
+bool doHash(uint8_t*, uint8_t*);
+uint8_t* EXHASH(uint8_t *, size_t, size_t);
+uint8_t* RANDEXHASH(size_t, size_t);

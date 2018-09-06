@@ -2,47 +2,21 @@
 #include <fstream>
 #include <iomanip>
 #include <cstring>
+#include <string>
 #include "macros.hpp"
 #include "filefunc.hpp"
 using namespace std;
 
 
-void _printhex(char ch);
-void printhex(char ch);
-void printBinary(char ch);
-int countBinary(char ch);
+void inprinthex(uint8_t ch);
+void printhex(uint8_t ch);
+void printBinary(uint8_t ch);
+void printBinaryCmp(uint8_t, uint8_t);
+int  countBinary(uint8_t ch);
+bool cmpBinary( uint8_t a,  uint8_t b, short level);
 
-int main2(int argc, char* argv[]){
-    if(argc < 2){
-        cout << "usage: ./test filename";
-        exit(0);
-    }
-    fstream myfile(argv[1]);
-    char ch;
-    int count = 0;
-    int bytes = 0;
-    if(myfile.is_open()){
-        int index = 0;
-        while(!myfile.eof()){
-            myfile >> ch;
-            //printBinary(ch);
-            count += countBinary(ch);
-            ++bytes;
 
-//            cout << " ";
-//
-//            if(index++ == 8){
-//                cout << endl;
-//                index = 0;
-//            }
-        }
-    }
-
-    cout << count << " '1' in " << bytes << " BYTE." <<" TOTAL " << (float)count / (8 * (float)bytes) * 100<< "%" << endl;
-    return 0;
-}
-
-void _printhex(char ch){
+void inprinthex(uint8_t ch){
     switch(ch & 0x0F){
         case 0x01: cout << "1"; break;
         case 0x02: cout << "2"; break;
@@ -63,13 +37,13 @@ void _printhex(char ch){
     }
 }
 
-void printhex(char ch){
-    _printhex(ch >> 4);
-    _printhex(ch);
+void printhex(uint8_t c){
+    inprinthex(c >> 4);
+    inprinthex(c);
 }
 
 
-void printBinary(char ch){
+void printBinary(uint8_t ch){
     for(int i = 7; i >= 0; --i){
         if(ch & (1 << i))
             cout << "1";
@@ -78,7 +52,7 @@ void printBinary(char ch){
     }
 }
 
-int countBinary(char ch){
+int countBinary(uint8_t ch){
     int count = 0;
     for(int i = 7; i >= 0; --i){
         if(ch & (1 << i))
@@ -88,7 +62,32 @@ int countBinary(char ch){
     return count;
 }
 
-bool cmpBinary(unsigned char a, unsigned char b, short level){
+void printBinaryCmp(uint8_t a, uint8_t b){
+    string gray     = "\033[30m";
+    string red      = "\033[31m";
+    string green    = "\033[32m";
+    string yellow   = "\033[33m";
+    string blue     = "\033[34m";
+    string endcolor = "\033[0m";
+    string color;
+
+    for(int i = 7; i >= 0; --i){
+        if((a & 1 << i) == (b & 1 << i)){
+            color = gray;
+        }
+        else{
+            color = blue;
+        }
+
+        cout << color;
+        (b & 1 << i)? cout << "1": cout<< "0";
+        cout << endcolor;
+    }
+    cout << " ";
+
+}
+
+bool cmpBinary(uint8_t a, uint8_t b, short level){
     short mistake = 0;
     for(int i = 0; i < 8; ++i){
         if((a &= (1 << i)) !=  (b &= (1<< i)))
@@ -102,7 +101,7 @@ bool cmpBinary(unsigned char a, unsigned char b, short level){
 }
 
 
-ex_binary_t analyseBinary(unsigned char* p, size_t len){
+ex_binary_t analyseBinary(uint8_t* p, size_t len){
     ex_binary_t result;
     memset(&result, 0, sizeof(result));
 
@@ -111,6 +110,8 @@ ex_binary_t analyseBinary(unsigned char* p, size_t len){
     result.white = 0;
     result.most_len[0] = 1;
     result.most_len[1] = 1;
+    result.avg_len[0] = 0;
+    result.avg_len[1] = 0;
 
     bool _inblack = true, inblack = true;
     size_t index = 0;
@@ -121,6 +122,7 @@ ex_binary_t analyseBinary(unsigned char* p, size_t len){
         for(int i = 8; i > 0; --i){
             inblack = p[index] & 1 << (i - 1)? true: false;
             inblack? ++result.black: ++result.white;
+            inblack? cout << "1": cout << "0";
 
             //1->0 or 1->0 or block end
             if(_inblack != inblack || (index == len - 1 && i == 0)){
@@ -133,9 +135,12 @@ ex_binary_t analyseBinary(unsigned char* p, size_t len){
             else{
                 ++most_len;
             }
+
         }
-        ++index;
+        cout << " ";
+        if(index++ % 8 == 0)cout << endl;
     }
+    cout << endl;
 
     return result;
 }
