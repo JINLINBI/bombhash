@@ -61,7 +61,7 @@ bool restrict_tree::dec(uint8_t c){
             return false;
         }
         else{
-            if(next->value == 1){
+            if(i == 0 && next->value == 1){
                 //delete c
                 node = &root;
                 next = NULL;
@@ -69,18 +69,21 @@ bool restrict_tree::dec(uint8_t c){
                     next = (c & 1 << i)? node->left: node->right;
                     if(deleteable(next)){
                         (c & 1 << i)? node->left = NULL: node->right = NULL;
-                        node = next;
-                        delete next;
                     }
+                    if(node->right == NULL && node->left == NULL && node != &root)
+                        delete node;
+                    node = next;
                 }
                 break;
             }
-            else if(next->value > 1){
+            else if(i == 0 && next->value > 1){
                 --next->value;
                 break;
             }
-            node = next;
-            continue;
+            else{
+                node = next;
+                continue;
+            }
         }
     }
 
