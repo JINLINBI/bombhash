@@ -4,3 +4,4 @@ build/test
 *.txt
 *.swp
 tags
+testunit/test

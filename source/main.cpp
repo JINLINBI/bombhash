@@ -9,7 +9,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-    unsigned char b[BLOCK] = {0x34, 0xfe, 0x78, 0x8f, 0x32,
+    unsigned char b[] = {0x34, 0xfe, 0x78, 0x8f, 0x32,
                                         0x23, 0xe0, 0xb6, 0x78, 0xb2,
                                         0x6a, 0xc2, 0x44, 0x22, 0xd6,
                                         0x22, 0x7a, 0xa1, 0x89, 0x9c};
@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
     unsigned char *p;
 
     size_t blackCount = 0;
-    for(int i = 0; i < SHA_DIGEST_LENGTH; ++i){
+    for(int i = 0; i < BLOCK; ++i){
         blackCount += countBinary(b[i]);
     }
 
@@ -37,14 +37,14 @@ int main(int argc, char* argv[]){
     int count = 0;
     while(!pass){
         count++;
-        if(count == 1000) break;
-        p = RANDEXHASH(SHA_DIGEST_LENGTH, blackCount);
-        //p = RANDEXHASH((uint8_t*)"hasdfaserowerw", SHA_DIGEST_LENGTH, blackCount);
+        //if(count == 1000000) break;
+        p = RANDEXHASH(BLOCK, blackCount);
+        //p = RANDEXHASH((uint8_t*)"hasdfaserowerw", BLOCK, blackCount);
         if(p){
             bool enough = true;
             int index = 0;
-            for(size_t i = 0; i < SHA_DIGEST_LENGTH; ++i){
-                if(!cmpBinary(p[i], b[i], 1))
+            for(size_t i = 0; i < BLOCK; ++i){
+                if(!cmpBinary(p[i], b[i], 2))
                     enough = false;
                 printBinaryCmp(p[i], b[i]);
                 index++;

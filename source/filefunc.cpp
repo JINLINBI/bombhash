@@ -90,7 +90,7 @@ void printBinaryCmp(uint8_t a, uint8_t b){
 bool cmpBinary(uint8_t a, uint8_t b, short level){
     short mistake = 0;
     for(int i = 0; i < 8; ++i){
-        if((a &= (1 << i)) !=  (b &= (1<< i)))
+        if((a & (1 << i)) !=  (b & (1<< i)))
             ++mistake;
 
         if(mistake == level)

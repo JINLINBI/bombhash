@@ -6,7 +6,8 @@ LDFLAGS= -lcrypto
 
 OBJS =     main.o    \
 	    hashfunc.o    \
-            filefunc.o
+            filefunc.o    \
+            restrict_tree.o
 
 BUILDDIR = ../build/
 TARGET =    ../build/test
@@ -20,6 +21,9 @@ $(BUILDDIR)filefunc.o: filefunc.cpp
 	$(CXX) $(CFLAGS) -I../include -o $@ -c $<
 
 $(BUILDDIR)hashfunc.o: hashfunc.cpp
+	$(CXX) $(CFLAGS) -I../include -o $@ -c $<
+
+$(BUILDDIR)restrict_tree.o: restrict_tree.cpp
 	$(CXX) $(CFLAGS) -I../include -o $@ -c $<
 
 .PHONY: all

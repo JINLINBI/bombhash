@@ -115,7 +115,7 @@ uint8_t* RANDEXHASH(size_t len, size_t black){
 
     for(size_t i = 0; i < len; ++i){
         for(int bit = 7; bit >= 0; --bit){
-            blackColor = (rand() + 3333) % 2;
+            blackColor = !((rand() + 3333) % 2);
 
             if(blackColor && black){
                 p[index] |= 1 << bit;
