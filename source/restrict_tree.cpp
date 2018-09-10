@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <ctime>
+#include <sys/time.h>
 #include "restrict_tree.hpp"
 using namespace std;
 
@@ -47,6 +49,7 @@ bool restrict_tree::add(uint8_t c){
         }
     }
 
+    ++_size;
     return true;
 }
 
@@ -72,12 +75,14 @@ bool restrict_tree::dec(uint8_t c){
                     }
                     if(node->right == NULL && node->left == NULL && node != &root)
                         delete node;
+                    --_size;
                     node = next;
                 }
                 break;
             }
             else if(i == 0 && next->value > 1){
                 --next->value;
+                --_size;
                 break;
             }
             else{
@@ -91,10 +96,51 @@ bool restrict_tree::dec(uint8_t c){
 }
 
 
-size_t restrict_tree::count(){
-
+size_t restrict_tree::count() const{
     return true;
 }
+
+
+uint8_t restrict_tree::getrandom(unsigned name){
+    uint8_t result = 0;
+    size_t color;
+
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    srand((unsigned)tv.tv_usec);
+    restrict_node* node = &root;
+    for(int i = 7; i >= 0; --i){
+        color = rand() % 2;
+        if(color){
+            if(node->left){
+                result |= 1 << i;
+                node = node->left;
+            }
+            else if(node->right){
+                node = node->right;
+            }
+            else{
+                return 0;
+            }
+        }
+        else{
+            if(node->right){
+                node = node->right;
+            }
+            else if(node->left){
+                result |= 1 << i;
+                node = node->left;
+            }
+            else{
+                return 0;
+            }
+        }
+    }
+    dec(result);
+
+    return result;
+}
+
 
 void restrict_tree::print(){
     vector<int> v;

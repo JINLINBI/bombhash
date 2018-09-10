@@ -17,6 +17,7 @@ class restrict_node{
 
 class restrict_tree{
     public:
+        size_t        _size;
         restrict_node root;
 
     public:
@@ -24,8 +25,10 @@ class restrict_tree{
         ~restrict_tree();
         bool add(uint8_t);
         bool dec(uint8_t);
-        size_t count();
+        size_t count() const;
         void print();
+        uint8_t getrandom(unsigned);
+        size_t size() const {return _size;};
 
     private:
         bool deletechild(restrict_node*);

@@ -6,7 +6,9 @@ int main(int argc, char* argv[]){
     restrict_tree tree;
     tree.add(c);
     tree.add(0x77);
-    tree.dec(c);
+    tree.add(0x67);
+    //tree.dec(c);
+    //tree.dec(0x67);
     tree.print();
 
     return 0;
