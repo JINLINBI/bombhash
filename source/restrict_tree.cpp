@@ -13,6 +13,15 @@ restrict_node::restrict_node(){
 
 
 restrict_node::~restrict_node(){
+    if(left){
+        delete left;
+        left = NULL;
+    }
+
+    if(right){
+        delete right;
+        right = NULL;
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -73,17 +82,18 @@ bool restrict_tree::dec(uint8_t c){
                     if(deleteable(next)){
                         (c & 1 << i)? node->left = NULL: node->right = NULL;
                     }
-                    if(node->right == NULL && node->left == NULL && node != &root)
+
+                    if(node->right == NULL && node->left == NULL && node != &root){
                         delete node;
-                    --_size;
+                    }
+
                     node = next;
                 }
-                break;
+                --_size;
             }
             else if(i == 0 && next->value > 1){
                 --next->value;
                 --_size;
-                break;
             }
             else{
                 node = next;
@@ -98,6 +108,11 @@ bool restrict_tree::dec(uint8_t c){
 
 size_t restrict_tree::count() const{
     return true;
+}
+
+
+void restrict_tree::clear() {
+    return;
 }
 
 

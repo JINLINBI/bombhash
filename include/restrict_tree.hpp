@@ -27,6 +27,7 @@ class restrict_tree{
         bool dec(uint8_t);
         size_t count() const;
         void print();
+        void clear();
         uint8_t getrandom(unsigned);
         size_t size() const {return _size;};
 

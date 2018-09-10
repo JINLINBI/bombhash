@@ -49,8 +49,10 @@ int main(int argc, char* argv[]){
         bool enough = true;
         for(size_t i = 0; i < BLOCK; ++i){
             uint8_t temp_c = tree.getrandom(randnum);
-            if(!cmpBinary(temp_c, b[i], 0))
+            if(!cmpBinary(temp_c, b[i], 0)){
                 enough = false;
+                break;
+            }
             printBinaryCmp(temp_c, b[i]);
         }
         cout << endl;
@@ -76,8 +78,6 @@ int main(int argc, char* argv[]){
             pass = true;
             for(size_t i = 0; i < BLOCK; ++i){
                 uint8_t temp_c = tree.getrandom(randnum);
-                if(!cmpBinary(temp_c, b[i], 0))
-                    enough = false;
                 printBinaryCmp(temp_c, b[i]);
             }
             gettimeofday(&tv, NULL);
