@@ -1,7 +1,6 @@
 *.7z
 *.o
 build/test
-*.txt
 *.swp
 tags
 testunit/test
